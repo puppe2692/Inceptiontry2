@@ -1,0 +1,81 @@
+version: '3.9'
+
+name: inception
+services:
+  mariadb:
+    container_name: mariadb
+    image: nwyseur/mariadb
+    build: 
+      context: requirements/mariadb
+    environment:
+      - MYSQL_ROOT_PASSWD
+      - MYSQL_USER
+      - MYSQL_USER_PASSWD
+      - MYSQL_DATABASE
+    networks:
+      - inception
+    restart: unless-stopped
+    volumes:
+      - mariadb:/var/lib/mysql
+  wordpress:
+    container_name: wordpress
+    image: nwyseur/wordpress
+    build: requirements/wordpress
+    networks:
+      - inception
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_USER_PASSWD
+      - MYSQL_HOST=mariadb
+      - NGINX_DOMAIN
+      - WORDPRESS_ADMIN_USER
+      - WORDPRESS_ADMIN_PASSWD
+      - WORDPRESS_ADMIN_EMAIL
+      - WORDPRESS_SITE_TITLE
+      - WORDPRESS_AUTHOR
+      - WORDPRESS_AUTHOR_EMAIL
+      - WORDPRESS_AUTHOR_PASSWD
+    volumes:
+      - wordpress:/var/www/wordpress
+    depends_on:
+      mariadb:
+        condition: service_healthy
+        
+  nginx:
+    container_name: nginx
+    image: nwyseur/nginx
+    build:
+      context: requirements/nginx
+      args:
+        - NGINX_DOMAIN
+    networks:
+      - inception
+    restart: unless-stopped
+    ports:
+      - 443:443
+    volumes:
+      - wordpress:/var/www/wordpress:ro
+    depends_on:
+      - wordpress
+  
+volumes:
+  mariadb:
+    name: mariadb
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: $HOME/$DATA_DIR/mariadb
+  wordpress:
+    name: wordpress
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: $HOME/$DATA_DIR/wordpress
+
+networks:
+  inception:
+    driver: bridge
