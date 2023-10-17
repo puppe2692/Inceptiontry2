@@ -59,6 +59,20 @@ services:
       - wordpress:/var/www/wordpress:ro
     depends_on:
       - wordpress
+     # - adminer
+
+ # adminer:
+  #  container_name: adminer
+   # image: nwyseur/adminer
+   # build: requirements/bonus/adminer
+   # networks:
+    #  - inception
+    #restart: unless-stopped
+    #volumes:
+     # - adminer:/var/www/adminer
+    #depends_on:
+     # mariadb:
+      #  condition: service_healthy
   
 volumes:
   mariadb:
@@ -75,6 +89,8 @@ volumes:
       o: bind
       type: none
       device: $HOME/$DATA_DIR/wordpress
+  #adminer:
+   # name: adminer
 
 networks:
   inception:
