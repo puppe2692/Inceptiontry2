@@ -4,9 +4,7 @@ name: inception
 services:
   mariadb:
     container_name: mariadb
-    image: nwyseur/mariadb
-    build: 
-      context: requirements/mariadb
+    build: requirements/mariadb/
     environment:
       - MYSQL_ROOT_PASSWD
       - MYSQL_USER
@@ -15,12 +13,14 @@ services:
     networks:
       - inception
     restart: unless-stopped
+    expose:
+      - 3306
     volumes:
       - mariadb:/var/lib/mysql
+
   wordpress:
     container_name: wordpress
-    image: nwyseur/wordpress
-    build: requirements/wordpress
+    build: requirements/wordpress/
     networks:
       - inception
     restart: unless-stopped
@@ -39,13 +39,14 @@ services:
       - WORDPRESS_AUTHOR_PASSWD
     volumes:
       - wordpress:/var/www/wordpress
+    expose:
+      - 9000
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
+    #    condition: service_healthy
         
   nginx:
     container_name: nginx
-    image: nwyseur/nginx
     build:
       context: requirements/nginx
       args:
@@ -56,24 +57,22 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress:/var/www/wordpress:ro
-    depends_on:
-      - wordpress
-      - adminer
+      - wordpress:/var/www/wordpress
+    #depends_on:
+    #  - wordpress
 
-  adminer:
-    container_name: adminer
-    image: nwyseur/adminer
-    build: requirements/bonus/adminer
-    networks:
-      - inception
-    restart: unless-stopped
-    volumes:
-      - adminer:/var/www/adminer
-    depends_on:
-      mariadb:
-        condition: service_healthy
-  
+#  adminer:
+#    container_name: adminer
+#    build: requirements/bonus/adminer
+#    networks:
+#      - inception
+#    restart: unless-stopped
+#    volumes:
+#      - adminer:/var/www/adminer
+    #depends_on:
+      #mariadb:
+        #condition: service_healthy#
+
 volumes:
   mariadb:
     name: mariadb
@@ -89,8 +88,8 @@ volumes:
       o: bind
       type: none
       device: $HOME/$DATA_DIR/wordpress
-  adminer:
-    name: adminer
+#  adminer:
+#    name: adminer
 
 networks:
   inception:

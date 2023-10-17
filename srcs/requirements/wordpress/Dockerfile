@@ -5,17 +5,10 @@ RUN apt-get update && apt-get upgrade -y
 #installation PHP
 RUN apt-get install -y ghostscript \
                 php \
-                php-bcmath \
                 php-curl \
-                php-imagick \
-                php-intl \
-                php-json \
                 php-mbstring \
                 php-mysql \
-                php-xml \
-                php-zip \
                 php-fpm \
-                php-redis \
                 wget \
                 unzip \
                 vim \

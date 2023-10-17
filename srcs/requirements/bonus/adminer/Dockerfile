@@ -33,7 +33,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
 WORKDIR /var/www/adminer
 USER www-data
 
-EXPOSE 9000
+EXPOSE 3306
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["/usr/sbin/php-fpm7.3", "-F"]
