@@ -10,7 +10,7 @@ define('DB_USER', '$MYSQL_USER');
 define('DB_PASSWORD', '$MYSQL_USER_PASSWD');
 
 /** MySQL hostname */
-define('DB_HOST', '$MYSQL_HOST');
+define('DB_HOST', 'mariadb');
 
 /** Database Charset to use in creating database tables. */
 define('DB_CHARSET', 'utf8');

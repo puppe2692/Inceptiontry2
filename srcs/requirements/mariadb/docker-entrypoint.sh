@@ -37,13 +37,6 @@ create_database() {
 	mariadb -e "GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_USER_PASSWD';"
 	echo "Created the '$MYSQL_DATABASE' database"
 
-	#mariadb -e "CREATE USER '$MYSQL_GITEA_USER'@'%' IDENTIFIED BY '$MYSQL_GITEA_PASSWD';"
-	#echo "Created the user '$MYSQL_GITEA_USER'"
-
-	#mariadb -e "CREATE DATABASE $MYSQL_GITEA_DATABASE;"
-	#mariadb -e "GRANT ALL ON $MYSQL_GITEA_DATABASE.* TO '$MYSQL_GITEA_USER'@'%' IDENTIFIED BY '$MYSQL_GITEA_PASSWD';"
-	#echo "Created the '$MYSQL_GITEA_DATABASE' database"
-
 	service mysql stop
 	echo "Initialization finished, temporaty server stopped"
 }
