@@ -1,39 +1,34 @@
-# Version: 1.0
+FROM alpine:3.16
 
-FROM debian:buster
+ARG PHP_VERSION=8
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y wget \
-                       php \
-                       php-mysql \
-                       php-fpm \
-                       php-common \
-                       php-cli \
-                       php-json \
-                       php-opcache \
-                       php-readline
+RUN apk update && apk upgrade && apk add --no-cache \
+    php${PHP_VERSION} \
+    php${PHP_VERSION}-common \
+    php${PHP_VERSION}-session \
+    php${PHP_VERSION}-iconv \
+    php${PHP_VERSION}-gd \
+    php${PHP_VERSION}-curl \
+    php${PHP_VERSION}-xml \
+    php${PHP_VERSION}-mysqli \
+    php${PHP_VERSION}-imap \
+    php${PHP_VERSION}-cgi \
+    php${PHP_VERSION}-pdo \
+    php${PHP_VERSION}-pdo_mysql \
+    php${PHP_VERSION}-soap \
+    php${PHP_VERSION}-posix \
+    php${PHP_VERSION}-gettext \
+    php${PHP_VERSION}-ldap \
+    php${PHP_VERSION}-ctype \
+    php${PHP_VERSION}-dom \
+    php${PHP_VERSION}-simplexml \
+    wget
 
-RUN mkdir -p /run/php && \
-    mkdir -p /var/www/adminer && \
-    mkdir -p /var/log/php7-fpm && \
-    touch /var/log/php7.3-fpm.log
+WORKDIR /var/www
 
-ADD https://www.adminer.org/latest.php /var/www/adminer/index.php
-ADD https://raw.githubusercontent.com/pepa-linha/Adminer-Design-Dark/master/adminer.css /var/www/adminer/adminer.css
+RUN wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1.php && \
+    mv adminer-4.8.1.php index.php && chown -R root:root /var/www/
 
-COPY ./www.conf /etc/php/7.3/fpm/pool.d/www.conf
-COPY ./docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+EXPOSE 8080
 
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
-    chown -R www-data:www-data /var/www/adminer && \
-    chown -R www-data:www-data /var/log/php7-fpm && \
-    chown -R www-data:www-data /run/php && \
-    chown    www-data:www-data /var/log/php7.3-fpm.log
-
-WORKDIR /var/www/adminer
-USER www-data
-
-EXPOSE 3306
-
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["/usr/sbin/php-fpm7.3", "-F"]
+CMD	[ "php", "-S", "[::]:8080", "-t", "/var/www" ]

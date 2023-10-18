@@ -61,17 +61,31 @@ services:
     #depends_on:
     #  - wordpress
 
-#  adminer:
-#    container_name: adminer
-#    build: requirements/bonus/adminer
-#    networks:
-#      - inception
-#    restart: unless-stopped
-#    volumes:
-#      - adminer:/var/www/adminer
-    #depends_on:
-      #mariadb:
-        #condition: service_healthy#
+  #adminer:
+  #  container_name: adminer
+  #  build: requirements/bonus/adminer
+  #  networks:
+  #    - inception
+  #  restart: unless-stopped
+  #  volumes:
+  #    - adminer:/var/www/adminer
+  #  expose:
+  #    - 9000
+  #  depends_on:
+  #    - mariadb
+        #condition: service_healthy
+  adminer:
+    build:
+      context: .
+      dockerfile: requirements/bonus/adminer/Dockerfile
+    container_name: adminer
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
+    networks:
+     - inception
+    restart: always
 
 volumes:
   mariadb:
@@ -88,8 +102,8 @@ volumes:
       o: bind
       type: none
       device: $HOME/$DATA_DIR/wordpress
-#  adminer:
-#    name: adminer
+  adminer:
+    name: adminer
 
 networks:
   inception:
