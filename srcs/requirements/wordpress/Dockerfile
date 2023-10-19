@@ -36,7 +36,7 @@ RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
     mv /tmp/wp-cli.phar /usr/local/bin/wp
 
 #configuration PHP
-COPY ./www.conf /etc/php/7.3/fpm/pool.d/www.conf
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
 RUN chown -R www-data:www-data /run/php && \
     chown -R www-data:www-data /var/www && \
@@ -45,7 +45,7 @@ RUN chown -R www-data:www-data /run/php && \
     chmod -R g+w /var/www/wordpress
 
 #we copy the script, give the right to launch it in local on our computer
-COPY docker-entrypoint.sh /usr/local/bin
+COPY ./tools/docker-entrypoint.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 #We go the html directory

@@ -17,9 +17,9 @@ RUN openssl req -x509 -newkey rsa:4096 -keyout "/etc/cert/$NGINX_DOMAIN/key.pem"
 RUN openssl req -x509 -newkey rsa:4096 -keyout "/etc/cert/adminer.$NGINX_DOMAIN/key.pem" -out "/etc/cert/adminer.$NGINX_DOMAIN/cert.pem" -sha256 -days 365 -nodes -subj "/CN=adminer.$NGINX_DOMAIN"
 
 # Ajout des fichiers de configuration
-COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./wordpress.conf "/etc/nginx/conf.d/$NGINX_DOMAIN.conf"
-COPY ./adminer.conf "/etc/nginx/conf.d/adminer.$NGINX_DOMAIN.conf"
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+COPY ./conf/wordpress.conf "/etc/nginx/conf.d/$NGINX_DOMAIN.conf"
+COPY ./conf/adminer.conf "/etc/nginx/conf.d/adminer.$NGINX_DOMAIN.conf"
 
 #remplace \$NGINX_DOMAIN par sa valeur dans tous les fichiers de conf
 RUN sed -i "s/\$NGINX_DOMAIN/$NGINX_DOMAIN/g" /etc/nginx/conf.d/*

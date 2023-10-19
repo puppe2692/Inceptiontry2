@@ -1,0 +1,4 @@
+- Alpine 3.17
+- Verifier le nom des images - ok
+- verifier la connexion en root sans mdp
+- verifier la persistance - ok
